@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Happy Independence Day Pakistan - A special interactive Pakistani Independence Day celebration">
+    <title>Happy Independence Day Pakistan</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #006400 0%, #228B22 50%, #32CD32 100%);
+            background-image: url('bg3.jpg'); 
+            background-size: cover; 
+            background-attachment: fixed;
+            background-repeat: no-repeat; 
+            background-position: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float-particle 8s infinite linear;
+        }
+
+        @keyframes float-particle {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #006400;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(0, 100, 0, 0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .independence-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15), 0 0 40px rgba(0, 100, 0, 0.1);
+            padding: 3rem;
+            width: 95%;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 1rem auto;
+            border: 2px solid rgba(0, 100, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+        }
+
+        .independence-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 100, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .independence-card:hover::before {
+            left: 100%;
+        }
+
+        .independence-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.2), 0 0 60px rgba(0, 100, 0, 0.2);
+        }
+        
+        .page {
+            display: none;
+            animation: fadeInUp 1s ease-out;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        h1 {
+            color: #006400;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            background: linear-gradient(45deg, #006400, #228B22, #32CD32);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(45deg, #006400, #228B22);
+            border-radius: 2px;
+        }
+
+        p {
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .btn-next {
+            background: linear-gradient(45deg, #006400, #228B22, #32CD32);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            margin-top: 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(0, 100, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-next::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-next:hover::before {
+            left: 100%;
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 100, 0, 0.4);
+            background: linear-gradient(45deg, #228B22, #32CD32, #006400);
+        }
+
+        .btn-next:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .gallery-container {
+            margin: 3rem 0;
+        }
+
+        .gallery-img {
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            object-fit: cover;
+            height: 280px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 100, 0, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .gallery-img:hover::before {
+            left: 100%;
+        }
+        
+        .gallery-img:hover {
+            transform: scale(1.08) rotate(2deg);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border-color: #006400;
+        }
+
+        .gallery-img:focus {
+            outline: 4px solid #006400;
+            outline-offset: 3px;
+        }
+        
+        .wishes-text {
+            font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+            line-height: 2;
+            color: #333;
+            margin-bottom: 2.5rem;
+            text-align: left;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 255, 240, 0.8));
+            border-radius: 20px;
+            border-left: 6px solid #006400;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wishes-text::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 100, 0, 0.05) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .wishes-text p {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #006400;
+            border-radius: 50%;
+            animation: fall 6s linear infinite;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(0, 100, 0, 0.5);
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(40px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .star {
+            color: #FFD700;
+            font-size: 2rem;
+            animation: twinkle 1.5s infinite alternate;
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        @keyframes twinkle {
+            to {
+                transform: scale(1.4) rotate(10deg);
+                opacity: 0.8;
+            }
+        }
+
+        /* Floating stars animation */
+        .star-float {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            animation: float 8s ease-in-out infinite;
+            opacity: 0.9;
+            color: #FFD700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .star-float:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .star-float:nth-child(2) { left: 20%; animation-delay: 1.5s; }
+        .star-float:nth-child(3) { left: 30%; animation-delay: 3s; }
+        .star-float:nth-child(4) { left: 70%; animation-delay: 4.5s; }
+        .star-float:nth-child(5) { left: 80%; animation-delay: 6s; }
+        .star-float:nth-child(6) { left: 90%; animation-delay: 7.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-30px) rotate(10deg) scale(1.1); }
+        }
+
+        /* Progress indicator */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dot::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            background: #006400;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #006400;
+            transform: scale(1.3);
+            box-shadow: 0 0 15px rgba(0, 100, 0, 0.5);
+        }
+
+        .dot.active::before {
+            width: 5px;
+            height: 5px;
+            background: white;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .independence-card {
+                padding: 2rem;
+                margin: 0.5rem;
+                width: 98%;
+                border-radius: 25px;
+            }
+
+            .gallery-img {
+                height: 200px;
+            }
+
+            .btn-next {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+
+            .wishes-text {
+                padding: 1.5rem;
+                font-size: 1.1rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .independence-card {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-img {
+                height: 180px;
+            }
+
+            .btn-next {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+
+            .wishes-text {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        /* Accessibility improvements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus styles for better accessibility */
+        .btn-next:focus {
+            outline: 4px solid #006400;
+            outline-offset: 3px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .independence-card {
+                background: white;
+                border: 3px solid #000;
+            }
+            
+            h1 {
+                color: #000;
+                text-shadow: none;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .page, .btn-next, .gallery-img, .star, .star-float, .particle {
+                animation: none;
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Loading screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Floating stars -->
+    <div class="star-float">⭐</div>
+    <div class="star-float">⭐</div>
+    <div class="star-float">⭐</div>
+    <div class="star-float">⭐</div>
+    <div class="star-float">⭐</div>
+    <div class="star-float">⭐</div>
+
+    <div class="independence-card">
+        <!-- Page 1 -->
+        <div class="page active" id="page1">
+            <h1><i class="fas fa-flag"></i> Happy Independence Day Pakistan!</h1>
+            <p>Celebrating the freedom, unity, and spirit of our beloved Pakistan! 🇵🇰</p>
+            <button class="btn btn-next" onclick="nextPage()" aria-label="Click for surprise">
+                <i class="fas fa-star"></i> Click for Celebration
+            </button>
+        </div>
+        
+        <!-- Page 2 - Gallery -->
+        <div class="page" id="page2">
+            <h1><i class="fas fa-images"></i> Pakistani Memories</h1>
+            <div class="gallery-container">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <img src="5.jpg" class="img-fluid gallery-img" alt="Pakistan Independence Day Memory 1" loading="lazy">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="6.jpg" class="img-fluid gallery-img" alt="Pakistan Independence Day Memory 2" loading="lazy">
+                    </div>
+                </div>
+                <div class="row g-4 mt-3">
+                    <div class="col-md-6">
+                        <img src="7.jpg" class="img-fluid gallery-img" alt="Pakistan Independence Day Memory 3" loading="lazy">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="8.jpg" class="img-fluid gallery-img" alt="Pakistan Independence Day Memory 4" loading="lazy">
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-next" onclick="nextPage()" aria-label="Continue to next page">
+                <i class="fas fa-arrow-right"></i> Next
+            </button>
+        </div>
+        
+        <div class="page" id="page3">
+            <h1><i class="fas fa-heart"></i> Patriotic Wishes</h1>
+            <div class="wishes-text">
+                <p><strong>Dear Fellow Pakistani,</strong></p>
+                <p>On this Independence Day, we celebrate the freedom and unity that makes Pakistan great! 🇵🇰</p>
+                <p>May the spirit of Quaid-e-Azam continue to inspire us all to work together for a brighter future. Pakistan Zindabad! ✨</p>
+                <p>Let's honor the sacrifices of our forefathers who fought for our freedom and continue to build a nation of unity, strength, and hope! 🏛️</p>
+                <p>Pakistan Zindabad! <span class="star" aria-label="star">⭐</span></p>
+                <p><strong>Happy Independence Day! 🎆🎇</strong> May the green and white flag forever wave as a symbol of our enduring freedom and the promise of opportunity for all Pakistanis! 🌟</p>
+            </div>
+            
+            <button class="btn btn-next" onclick="nextPage()" aria-label="Continue to final page">
+                <i class="fas fa-arrow-right"></i> Next
+            </button>
+        </div>
+        
+        <!-- Page 4 - Final -->
+        <div class="page" id="page4">
+            <h1><i class="fas fa-star"></i> Happy Independence Day Pakistan Once Again!</h1>
+            <p>Thank you for being part of this great nation! 🇵🇰</p>
+            <p>Wishing you a safe and joyous celebration! 🎊</p>
+            <button class="btn btn-next" onclick="createConfetti()" id="celebration-btn" aria-label="Start celebration with confetti">
+                <i class="fas fa-fireworks"></i> Click for Fireworks
+            </button>
+            <div id="confetti-container"></div>
+        </div>
+
+        <!-- Progress dots -->
+        <div class="progress-dots">
+            <div class="dot active" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+            <div class="dot" id="dot4"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPage = 1;
+        const totalPages = 4;
+        
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Hide loading screen when page is ready
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1500);
+        });
+
+        function nextPage() {
+            // Remove active class from current page
+            document.getElementById(`page${currentPage}`).classList.remove('active');
+            
+            // Update current page
+            currentPage = currentPage < totalPages ? currentPage + 1 : 1;
+            
+            // Add active class to new page
+            document.getElementById(`page${currentPage}`).classList.add('active');
+            
+            // Update progress dots
+            updateProgressDots();
+            
+            // Add smooth scroll to top for mobile
+            if (window.innerWidth <= 768) {
+                document.querySelector('.independence-card').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }
+        }
+
+        function updateProgressDots() {
+            // Remove active class from all dots
+            document.querySelectorAll('.dot').forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            // Add active class to current dot
+            document.getElementById(`dot${currentPage}`).classList.add('active');
+        }
+        
+        function createConfetti() {
+            const colors = ['#006400', '#228B22', '#32CD32', '#ffffff', '#FFD700', '#FFA500', '#FF6347', '#4169E1'];
+            const container = document.getElementById('confetti-container');
+            const btn = document.getElementById('celebration-btn');
+            
+            // Clear previous confetti
+            container.innerHTML = '';
+            
+            // Create new confetti with better performance
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = -10 + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 6 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.animationDuration = Math.random() * 4 + 3 + 's';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                container.appendChild(confetti);
+            }
+            
+            // Change button text and disable
+            btn.innerHTML = '<i class="fas fa-star"></i> Fireworks Time!';
+            btn.disabled = true;
+            
+            // Add celebration sound effect (optional)
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT');
+                audio.volume = 0.1;
+                audio.play().catch(() => {}); // Ignore if audio fails
+            } catch (e) {
+                // Ignore audio errors
+            }
+        }
+
+        // Keyboard navigation support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    nextPage();
+                } else if (currentPage === totalPages) {
+                    createConfetti();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    document.getElementById(`page${currentPage}`).classList.remove('active');
+                    currentPage--;
+                    document.getElementById(`page${currentPage}`).classList.add('active');
+                    updateProgressDots();
+                }
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - next page
+                    if (currentPage < totalPages) {
+                        nextPage();
+                    } else if (currentPage === totalPages) {
+                        createConfetti();
+                    }
+                } else {
+                    // Swipe right - previous page
+                    if (currentPage > 1) {
+                        document.getElementById(`page${currentPage}`).classList.remove('active');
+                        currentPage--;
+                        document.getElementById(`page${currentPage}`).classList.add('active');
+                        updateProgressDots();
+                    }
+                }
+            }
+        }
+
+        // Preload images for better performance
+        function preloadImages() {
+            const imageUrls = [
+                'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMDA2NDAwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIDE8L3RleHQ+PC9zdmc+',
+                'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMjI4QjIyIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIDI8L3RleHQ+PC9zdmc+',
+                'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZENzAwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIDM8L3RleHQ+PC9zdmc+',
+                'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmZmZmZmIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIDQ8L3RleHQ+PC9zdmc+'
+            ];
+            
+            imageUrls.forEach(url => {
+                const img = new Image();
+                img.src = url;
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            preloadImages();
+            updateProgressDots();
+        });
+    </script>
+</body>
+</html>
